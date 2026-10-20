@@ -741,3 +741,10 @@ body.loaded .hero-title .line > span { transform: none; }
   .founder-photo span { font-size: 26px; }
   .founder h3 { font-size: 26px; }
 }
+
+/* ---------- direct email links ---------- */
+.founder-links a.founder-mail { background: var(--accent); border-color: var(--accent); color: #fff; }
+.founder-links a.founder-mail:hover { color: #fff; filter: brightness(1.1); }
+.cta-mail { margin-top: 18px; font-size: 14px; color: var(--muted); }
+.cta-mail a { color: var(--text); text-decoration: underline; text-decoration-color: var(--spark); text-underline-offset: 3px; transition: color .2s; }
+.cta-mail a:hover { color: var(--spark); }
