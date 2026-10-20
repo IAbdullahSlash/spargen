@@ -422,9 +422,63 @@
       <p class="kicker reveal">Let's build</p>
       <h2 class="reveal">Tell us how your<br />business <em>really</em> runs.</h2>
       <p class="lead reveal">A 30-minute call. No slide decks. You'll leave with a clear picture of what to build, what to buy, and what to leave alone.</p>
-      <form class="cta-form reveal" onsubmit="event.preventDefault(); this.classList.add('sent');">
-        <input type="email" required placeholder="you@company.com" aria-label="Work email" />
-        <button class="btn btn-primary" type="submit"><span class="label">Get in touch</span><span class="ok">Thanks — we'll be in touch ✓</span></button>
+      <form class="lead-form reveal" id="lead-form" novalidate data-web3forms-key="YOUR_ACCESS_KEY_HERE">
+        <!-- Web3Forms: paste your access key above (from web3forms.com). Until then the form opens the visitor's email app instead. -->
+        <div class="lf-grid">
+          <div class="lf-field">
+            <label for="lf-name">Your name</label>
+            <input id="lf-name" name="name" type="text" autocomplete="name" required maxlength="100" placeholder="Jane Doe" />
+            <p class="lf-error" id="lf-name-err" aria-live="polite"></p>
+          </div>
+          <div class="lf-field">
+            <label for="lf-email">Work email</label>
+            <input id="lf-email" name="email" type="email" autocomplete="email" required maxlength="150" placeholder="you@company.com" />
+            <p class="lf-error" id="lf-email-err" aria-live="polite"></p>
+          </div>
+          <div class="lf-field">
+            <label for="lf-company">Company <span class="lf-opt">optional</span></label>
+            <input id="lf-company" name="company" type="text" autocomplete="organization" maxlength="120" placeholder="Acme Industries" />
+          </div>
+          <div class="lf-field">
+            <label for="lf-type">What do you need?</label>
+            <select id="lf-type" name="project_type" required>
+              <option value="" selected disabled>Choose one</option>
+              <option>Custom software</option>
+              <option>ERP system</option>
+              <option>CRM system</option>
+              <option>Internal operations tools</option>
+              <option>Not sure yet</option>
+            </select>
+            <p class="lf-error" id="lf-type-err" aria-live="polite"></p>
+          </div>
+          <div class="lf-field lf-full">
+            <span class="lf-label" id="lf-time-label">When do you want to start?</span>
+            <div class="lf-chips" role="radiogroup" aria-labelledby="lf-time-label">
+              <label><input type="radio" name="timeline" value="As soon as possible" /><span>ASAP</span></label>
+              <label><input type="radio" name="timeline" value="In 1–3 months" /><span>1–3 months</span></label>
+              <label><input type="radio" name="timeline" value="In 3–6 months" /><span>3–6 months</span></label>
+              <label><input type="radio" name="timeline" value="Just exploring" checked /><span>Just exploring</span></label>
+            </div>
+          </div>
+          <div class="lf-field lf-full">
+            <label for="lf-message">Tell us a little about it</label>
+            <textarea id="lf-message" name="message" rows="4" required minlength="20" maxlength="3000" placeholder="What does your team do today, and what's getting in the way?"></textarea>
+            <p class="lf-error" id="lf-message-err" aria-live="polite"></p>
+          </div>
+        </div>
+        <!-- spam trap: hidden from people, bots fill it in -->
+        <input type="checkbox" name="botcheck" class="lf-trap" tabindex="-1" autocomplete="off" aria-hidden="true" />
+        <div class="lf-foot">
+          <p class="lf-privacy">We only use your details to reply to this enquiry. No newsletters, no sharing.</p>
+          <button class="btn btn-primary lf-submit" type="submit"><span class="lf-spinner" aria-hidden="true"></span><span class="lf-btn-text">Send enquiry</span> <span aria-hidden="true">→</span></button>
+        </div>
+        <p class="lf-status" id="lf-status" role="status" aria-live="polite"></p>
+        <div class="lf-done" id="lf-done" tabindex="-1">
+          <span class="lf-check" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></span>
+          <h3>Thanks — your message is on its way.</h3>
+          <p>One of the founders will reply within one working day. Keep an eye on your inbox (and the spam folder, just in case).</p>
+          <button type="button" class="btn btn-ghost lf-again">Send another message</button>
+        </div>
       </form>
       <p class="cta-mail reveal">Prefer email? Write to <a href="mailto:abdullahaz7677@gmail.com,razaainaan@gmail.com?subject=Project%20enquiry%20via%20Spargen">both founders at once</a>, or reach <a href="mailto:abdullahaz7677@gmail.com?subject=Project%20enquiry%20via%20Spargen">Abdullah</a> or <a href="mailto:razaainaan@gmail.com?subject=Project%20enquiry%20via%20Spargen">Ainaan</a> directly.</p>
     </section>

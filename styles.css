@@ -477,14 +477,6 @@ body.loaded .hero-title .line > span { transform: none; }
 .cta-rings i:nth-child(3)::after { background: var(--cyan); box-shadow: 0 0 20px var(--cyan); }
 @keyframes ring { from { transform: rotateX(68deg) rotateZ(0); } to { transform: rotateX(68deg) rotateZ(360deg); } }
 .cta::before { content: ""; position: absolute; inset: 0; z-index: -2; background: radial-gradient(50% 50% at 50% 50%, rgba(255,106,43,.12), transparent 70%); }
-.cta-form { display: flex; gap: 8px; margin-top: 40px; padding: 6px; border-radius: 999px; background: rgba(var(--tint), .04); border: 1px solid var(--line-2); width: min(520px, 100%); backdrop-filter: blur(10px); }
-.cta-form input { flex: 1; min-width: 0; background: none; border: 0; outline: 0; color: var(--text); font: inherit; padding: 0 18px; }
-.cta-form input::placeholder { color: var(--dim); }
-.cta-form .ok { display: none; }
-.cta-form.sent .label { display: none; }
-.cta-form.sent .ok { display: inline; }
-.cta-form.sent input { display: none; }
-.cta-form.sent .btn { flex: 1; justify-content: center; }
 
 /* ---------- footer ---------- */
 .footer { position: relative; z-index: 2; padding: 80px max(24px, calc((100vw - 1200px) / 2)) 32px; border-top: 1px solid var(--line); background: var(--bg-2); overflow: hidden; }
@@ -748,3 +740,66 @@ body.loaded .hero-title .line > span { transform: none; }
 .cta-mail { margin-top: 18px; font-size: 14px; color: var(--muted); }
 .cta-mail a { color: var(--text); text-decoration: underline; text-decoration-color: var(--spark); text-underline-offset: 3px; transition: color .2s; }
 .cta-mail a:hover { color: var(--spark); }
+
+/* ---------- enquiry form (Web3Forms) ---------- */
+.lead-form {
+  position: relative; width: min(720px, 100%); margin-top: 44px; padding: 32px; text-align: left;
+  border-radius: 28px; border: 1px solid var(--line-2);
+  background: linear-gradient(180deg, rgba(var(--tint), .05), rgba(var(--tint), .02));
+  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 40px 80px -40px var(--shadow-a);
+}
+:root[data-theme="light"] .lead-form { background: #fff; box-shadow: 0 1px 2px rgba(20,24,40,.04), 0 30px 60px -30px rgba(20,24,40,.2); }
+.lf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 16px; }
+.lf-full { grid-column: 1 / -1; }
+.lf-field { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.lf-field label, .lf-label { font-size: 13px; font-weight: 500; color: var(--text); }
+.lf-opt { color: var(--dim); font-weight: 400; margin-left: 4px; }
+.lf-field input, .lf-field select, .lf-field textarea {
+  width: 100%; font: inherit; font-size: 15px; color: var(--text);
+  background: rgba(var(--tint), .035); border: 1px solid var(--line-2); border-radius: 14px;
+  padding: 13px 15px; outline: none; transition: border-color .2s, box-shadow .2s, background .2s;
+}
+.lf-field textarea { resize: vertical; min-height: 120px; line-height: 1.5; }
+.lf-field select { appearance: none; -webkit-appearance: none; cursor: pointer; padding-right: 40px;
+  background-image: linear-gradient(45deg, transparent 50%, var(--muted) 50%), linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+  background-position: calc(100% - 20px) 52%, calc(100% - 15px) 52%; background-size: 5px 5px; background-repeat: no-repeat; }
+.lf-field select option { color: #12141c; }
+.lf-field input::placeholder, .lf-field textarea::placeholder { color: var(--dim); }
+.lf-field input:focus, .lf-field select:focus, .lf-field textarea:focus { border-color: var(--spark); box-shadow: 0 0 0 4px rgba(255,106,43,.15); }
+.lf-field.invalid input, .lf-field.invalid select, .lf-field.invalid textarea { border-color: var(--down); }
+.lf-error { min-height: 0; font-size: 12.5px; color: var(--down); }
+.lf-error:empty { display: none; }
+.lf-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.lf-chips label { cursor: pointer; }
+.lf-chips input { position: absolute; opacity: 0; pointer-events: none; }
+.lf-chips span { display: inline-block; padding: 9px 16px; border-radius: 999px; font-size: 14px; border: 1px solid var(--line-2); color: var(--muted); transition: all .2s; }
+.lf-chips label:hover span { color: var(--text); border-color: rgba(var(--tint), .3); }
+.lf-chips input:checked + span { background: var(--spark); border-color: var(--spark); color: #fff; }
+.lf-chips input:focus-visible + span { box-shadow: 0 0 0 4px rgba(255,106,43,.25); }
+.lf-trap { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+.lf-foot { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin-top: 24px; padding-top: 22px; border-top: 1px solid var(--line); }
+.lf-privacy { font-size: 13px; color: var(--muted); max-width: 340px; }
+.lf-submit { flex: none; }
+.lf-spinner { display: none; width: 16px; height: 16px; border-radius: 50%; border: 2px solid rgba(20,7,0,.25); border-top-color: #140700; animation: spin .7s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.lead-form.sending .lf-spinner { display: inline-block; }
+.lead-form.sending .lf-submit { pointer-events: none; opacity: .85; }
+.lf-status { margin-top: 14px; font-size: 14px; color: var(--muted); }
+.lf-status:empty { display: none; }
+.lf-status.error { color: var(--down); }
+.lf-status a { color: var(--text); text-decoration: underline; text-underline-offset: 3px; }
+.lf-done { display: none; text-align: center; padding: 24px 8px; outline: none; }
+.lf-done h3 { font-size: 26px; margin: 18px 0 8px; }
+.lf-done p { color: var(--muted); max-width: 440px; margin: 0 auto 22px; }
+.lf-check { display: inline-grid; place-items: center; width: 64px; height: 64px; border-radius: 50%; background: rgba(95,158,31,.12); color: var(--lime); animation: pop .5s var(--ease); }
+.lf-check svg { width: 30px; height: 30px; }
+@keyframes pop { from { transform: scale(.4); opacity: 0; } to { transform: none; opacity: 1; } }
+.lead-form.done > :not(.lf-done) { display: none; }
+.lead-form.done .lf-done { display: block; }
+@media (max-width: 600px) {
+  .lead-form { padding: 22px; border-radius: 22px; }
+  .lf-grid { grid-template-columns: 1fr; }
+  .lf-foot { flex-direction: column; align-items: stretch; }
+  .lf-submit { justify-content: center; }
+}

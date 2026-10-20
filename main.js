@@ -294,3 +294,106 @@ footSvg.addEventListener("pointermove", (e) => {
   fwReveal.setAttribute("cy", ((e.clientY - r.top) / r.height) * 240);
 });
 footSvg.addEventListener("pointerleave", fwHide);
+
+/* ---------- enquiry form: validates, sends through Web3Forms, falls back to email ---------- */
+const leadForm = document.getElementById("lead-form");
+const lfStatus = document.getElementById("lf-status");
+const lfDone = document.getElementById("lf-done");
+const FOUNDERS = "abdullahaz7677@gmail.com,razaainaan@gmail.com";
+const LF_CHECKS = {
+  name: (v) => (v.length >= 2 ? "" : "Please tell us your name."),
+  email: (v) => (/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v) ? "" : "Please enter a valid email address."),
+  project_type: (v) => (v ? "" : "Please pick what you need — “Not sure yet” is fine."),
+  message: (v) => (v.length >= 20 ? "" : "A sentence or two helps us prepare (20+ characters)."),
+};
+
+function lfValidate(field) {
+  const check = LF_CHECKS[field.name];
+  if (!check) return true;
+  const msg = check(field.value.trim());
+  const wrap = field.closest(".lf-field");
+  wrap.classList.toggle("invalid", !!msg);
+  field.setAttribute("aria-invalid", msg ? "true" : "false");
+  const err = wrap.querySelector(".lf-error");
+  if (err) err.textContent = msg;
+  if (err) field.setAttribute("aria-describedby", err.id);
+  return !msg;
+}
+
+function lfMailto(data) {
+  const body = [
+    `Name: ${data.name}`, `Email: ${data.email}`, `Company: ${data.company || "—"}`,
+    `Needs: ${data.project_type}`, `Timeline: ${data.timeline}`, "", data.message,
+  ].join("\n");
+  return `mailto:${FOUNDERS}?subject=${encodeURIComponent(`Project enquiry: ${data.project_type}`)}&body=${encodeURIComponent(body)}`;
+}
+
+function lfFinish(viaEmailApp) {
+  lfDone.querySelector("h3").textContent = viaEmailApp ? "Your email app should now be open." : "Thanks — your message is on its way.";
+  lfDone.querySelector("p").textContent = viaEmailApp
+    ? "We've written the message for you — just press send. Nothing opened? Email us at abdullahaz7677@gmail.com or razaainaan@gmail.com."
+    : "One of the founders will reply within one working day. Keep an eye on your inbox (and the spam folder, just in case).";
+  leadForm.classList.add("done");
+  lfDone.focus();
+}
+
+[...leadForm.querySelectorAll("input, select, textarea")].forEach((f) => {
+  f.addEventListener("blur", () => f.value && lfValidate(f));
+  f.addEventListener("input", () => f.closest(".lf-field")?.classList.contains("invalid") && lfValidate(f));
+});
+
+leadForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  lfStatus.textContent = "";
+  lfStatus.classList.remove("error");
+  const fields = [...leadForm.querySelectorAll("[name]")].filter((f) => LF_CHECKS[f.name]);
+  const valid = fields.map(lfValidate); // check every field so all errors show at once
+  if (valid.includes(false)) { fields[valid.indexOf(false)].focus(); return; }
+
+  const data = Object.fromEntries(new FormData(leadForm));
+  Object.keys(data).forEach((k) => typeof data[k] === "string" && (data[k] = data[k].trim()));
+  if (data.botcheck) { lfFinish(false); return; } // a bot ticked the hidden box: pretend it worked
+
+  const key = leadForm.dataset.web3formsKey;
+  if (!key || key === "YOUR_ACCESS_KEY_HERE") { // not configured yet: hand over to the visitor's email app
+    location.href = lfMailto(data);
+    lfFinish(true);
+    return;
+  }
+
+  leadForm.classList.add("sending");
+  leadForm.querySelector(".lf-btn-text").textContent = "Sending…";
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 15000);
+  try {
+    const res = await fetch("https://api.web3forms.com/submit", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify({
+        access_key: key,
+        subject: `New enquiry: ${data.project_type} — ${data.name}`,
+        from_name: "Spargen website",
+        ...data,
+      }),
+      signal: ctrl.signal,
+    });
+    const out = await res.json().catch(() => ({}));
+    if (!res.ok || !out.success) throw new Error(out.message || `HTTP ${res.status}`);
+    leadForm.reset();
+    lfFinish(false);
+  } catch (err) {
+    console.warn("Enquiry form failed:", err);
+    lfStatus.classList.add("error");
+    lfStatus.innerHTML = `Sorry, that didn't go through. Please try again, or <a href="${lfMailto(data).replace(/"/g, "&quot;")}">send it by email instead</a>.`;
+  } finally {
+    clearTimeout(timer);
+    leadForm.classList.remove("sending");
+    leadForm.querySelector(".lf-btn-text").textContent = "Send enquiry";
+  }
+});
+
+leadForm.querySelector(".lf-again").addEventListener("click", () => {
+  leadForm.classList.remove("done");
+  leadForm.reset();
+  leadForm.querySelector("#lf-name").focus();
+});
