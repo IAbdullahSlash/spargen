@@ -246,13 +246,22 @@ export function initHero(canvas, labelEls) {
     camera.updateProjectionMatrix();
     const wide = W > 980;
     camera.position.z = wide ? 11 : 13;
-    const halfW = Math.tan(THREE.MathUtils.degToRad(21)) * camera.position.z * camera.aspect;
-    const contentRight = Math.min(W, 1248) / 2 / (W / 2) * halfW; // edge of the 1200px column
-    world.position.set(wide ? contentRight * 0.62 : 0, wide ? 0.1 : -1.4, 0);
-    world.scale.setScalar(wide ? 1 : W < 600 ? 0.6 : 0.78);
+    const halfH = Math.tan(THREE.MathUtils.degToRad(21)) * camera.position.z;
+    const halfW = halfH * camera.aspect;
+    if (wide) {
+      const contentRight = Math.min(W, 1248) / 2 / (W / 2) * halfW; // edge of the 1200px column
+      world.position.set(contentRight * 0.62, 0.1, 0);
+      world.scale.setScalar(1);
+    } else {
+      // phones/tablets: centre the panels in the reserved slot between the buttons and the stats
+      const slot = hero.querySelector(".hero-visual");
+      const cy = slot && slot.offsetHeight ? slot.offsetTop + slot.offsetHeight / 2 : H * 0.62;
+      world.position.set(0, (0.5 - cy / H) * 2 * halfH, 0);
+      world.scale.setScalar(Math.min(0.85, (halfW * 2 * 0.9) / 4.4)); // the deck is ~4.4 units wide
+    }
   }
   resize();
-  addEventListener("resize", resize);
+  new ResizeObserver(resize).observe(hero); // also catches font loading and slot size changes
 
   const mouse = { x: 0, y: 0, tx: 0, ty: 0 };
   addEventListener("pointermove", (e) => {
@@ -286,8 +295,9 @@ export function initHero(canvas, labelEls) {
     dust.rotation.y = t * 0.01 + mouse.x * 0.04;
 
     camera.position.x = mouse.x * 0.3;
-    camera.position.y = -mouse.y * 0.2 - scroll * 1.2;
-    camera.lookAt(0, -scroll * 1.0, 0);
+    const drift = W > 980 ? 1 : 0.15; // on phones the panels sit in a slot, so keep the camera nearly still
+    camera.position.y = -mouse.y * 0.2 - scroll * 1.2 * drift;
+    camera.lookAt(0, -scroll * 1.0 * drift, 0);
 
     v.labelAnchors.forEach((anchor, i) => {
       const el = labelEls[i];
