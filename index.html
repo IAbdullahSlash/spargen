@@ -38,7 +38,7 @@
       </svg>
       <span>spargen</span>
     </a>
-    <nav class="nav-links" aria-label="Primary">
+    <nav class="nav-links" id="nav-links" aria-label="Primary">
       <a href="#services">Services</a>
       <a href="#platform">Platform</a>
       <a href="#process">Process</a>
@@ -54,7 +54,7 @@
         <svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
       </button>
       <a href="#contact" class="btn btn-small btn-orbit">Start a project <span aria-hidden="true">→</span></a>
-      <button class="nav-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span></button>
+      <button class="nav-toggle" type="button" aria-label="Open menu" aria-controls="nav-links" aria-expanded="false"><span></span><span></span></button>
     </div>
   </header>
 
@@ -261,10 +261,10 @@
           </div>
           <div class="ps-rail reveal">
             <span class="ps-rail-line" aria-hidden="true"><span id="ps-rail-fill"></span></span>
-            <div class="ps-rail-item" data-i="0"><span class="ps-dot"></span><span><small>Weeks 1–2</small>Discover</span></div>
-            <div class="ps-rail-item" data-i="1"><span class="ps-dot"></span><span><small>Weeks 2–4</small>Architect</span></div>
-            <div class="ps-rail-item" data-i="2"><span class="ps-dot"></span><span><small>Every 2 weeks</small>Build &amp; ship</span></div>
-            <div class="ps-rail-item" data-i="3"><span class="ps-dot"></span><span><small>Ongoing</small>Evolve</span></div>
+            <button class="ps-rail-item" type="button" data-i="0" aria-label="Go to step 1: Discover"><span class="ps-dot" aria-hidden="true"></span><span><small>Weeks 1–2</small>Discover</span></button>
+            <button class="ps-rail-item" type="button" data-i="1" aria-label="Go to step 2: Architect"><span class="ps-dot" aria-hidden="true"></span><span><small>Weeks 2–4</small>Architect</span></button>
+            <button class="ps-rail-item" type="button" data-i="2" aria-label="Go to step 3: Build and ship"><span class="ps-dot" aria-hidden="true"></span><span><small>Every 2 weeks</small>Build &amp; ship</span></button>
+            <button class="ps-rail-item" type="button" data-i="3" aria-label="Go to step 4: Evolve"><span class="ps-dot" aria-hidden="true"></span><span><small>Ongoing</small>Evolve</span></button>
           </div>
         </div>
         <div class="ps-stage reveal">

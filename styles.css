@@ -376,7 +376,7 @@ body.loaded .hero-title .line > span { transform: none; }
 /* line runs exactly from the first dot's centre to the last dot's centre */
 .ps-rail-line { position: absolute; left: calc(var(--dot) / 2 - 1.5px); top: calc(var(--item-h) / 2); bottom: calc(var(--item-h) / 2); width: 3px; background: var(--line-2); border-radius: 2px; overflow: hidden; }
 .ps-rail-line span { position: absolute; inset: 0; transform-origin: top; transform: scaleY(0); background: linear-gradient(180deg, var(--spark), var(--violet), var(--cyan), var(--lime)); }
-.ps-rail-item { position: relative; height: var(--item-h); display: flex; align-items: center; font-family: var(--display); font-size: 32px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.15; color: var(--dim); transition: color .5s var(--ease); cursor: pointer; }
+.ps-rail-item { position: relative; width: 100%; height: var(--item-h); display: flex; align-items: center; padding: 0; border: 0; background: transparent; text-align: left; font-family: var(--display); font-size: 32px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.15; color: var(--dim); transition: color .5s var(--ease); cursor: pointer; }
 .ps-rail-item > span:last-child { transition: transform .5s var(--ease); }
 .ps-rail-item small { display: block; margin-bottom: 4px; font-family: var(--mono); font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--dim); font-weight: 400; transition: color .5s; }
 /* one dot style for every state: ring + core; states only change colour and glow */
@@ -388,6 +388,10 @@ body.loaded .hero-title .line > span { transform: none; }
 .ps-rail-item.is-current > span:last-child { transform: translateX(8px); }
 .ps-rail-item.is-current small { color: var(--spark); }
 .ps-rail-item.is-current .ps-dot { box-shadow: inset 0 0 0 5px var(--bg), 0 0 0 7px rgba(255,106,43,.16), 0 0 28px rgba(255,106,43,.75); }
+.ps-rail-item:focus-visible, .nav-toggle:focus-visible, .theme-toggle:focus-visible,
+.nav-links a:focus-visible, .btn:focus-visible, .founder-links a:focus-visible, .foot-cols a:focus-visible {
+  outline: 2px solid var(--spark); outline-offset: 4px;
+}
 
 .ps-stage {
   position: relative; height: min(500px, 62vh); border-radius: 28px; perspective: 1400px;
@@ -521,11 +525,13 @@ body.loaded .hero-title .line > span { transform: none; }
   .dash { grid-template-columns: 1fr; }
   .dash-side { display: none; }
   .kpis { grid-template-columns: 1fr 1fr; }
-  .kpi:last-child { display: none; }
+  /* Keep every dashboard metric visible; the third KPI flows onto a second row. */
+  .kpi:last-child { display: block; }
   .dash-grid { grid-template-columns: 1fr; }
   .foot-cols { gap: 40px; }
   .hero-labels { display: none; }
   .hero-sub { font-size: 16px; }
+  .hero-title { font-size: clamp(32px, 9.5vw, 54px); line-height: 1; }
   .hero-stats strong { font-size: 30px; }
   .scroll-hint { display: none; }
   /* sections breathe less on a small screen */
@@ -543,6 +549,8 @@ body.loaded .hero-title .line > span { transform: none; }
   .foot-cols a { padding: 5px 0; }
   .foot-cols { gap: 32px 40px; }
   .beam-node small, .beam-hub small { font-size: 10px; }
+  .faq-a p { padding-right: 8px; }
+  .foot-cols a, .foot-cols span { overflow-wrap: anywhere; }
 }
 
 /* extra links and the CTA only appear in the phone menu */
@@ -553,6 +561,10 @@ body.loaded .hero-title .line > span { transform: none; }
 @media (max-width: 980px) {
   .hero-visual { display: block; height: clamp(260px, 62vw, 380px); margin-top: 8px; }
   .hero-stats { padding-top: 8px; }
+}
+@media (max-width: 600px) {
+  .hero-visual { height: clamp(180px, 52vw, 280px); }
+  .hero-title { font-size: clamp(32px, 9.5vw, 54px); }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .001s !important; animation-iteration-count: 1 !important; transition-duration: .001s !important; }

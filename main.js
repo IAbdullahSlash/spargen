@@ -22,11 +22,25 @@ onScroll();
 toggle.addEventListener("click", () => {
   const open = nav.classList.toggle("open");
   toggle.setAttribute("aria-expanded", open);
+  toggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
 });
-nav.querySelectorAll(".nav-links a").forEach((a) => a.addEventListener("click", () => {
+function closeNav() {
   nav.classList.remove("open");
-  toggle.setAttribute("aria-expanded", false);
+  toggle.setAttribute("aria-expanded", "false");
+  toggle.setAttribute("aria-label", "Open menu");
+}
+nav.querySelectorAll(".nav-links a").forEach((a) => a.addEventListener("click", () => {
+  closeNav();
 }));
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && nav.classList.contains("open")) {
+    closeNav();
+    toggle.focus();
+  }
+});
+document.addEventListener("pointerdown", (e) => {
+  if (nav.classList.contains("open") && !nav.contains(e.target)) closeNav();
+});
 
 /* ---------- day / night theme ---------- */
 const themeBtn = document.getElementById("theme-toggle");
@@ -161,6 +175,8 @@ function psUpdate() {
   psRail.forEach((el, i) => {
     el.classList.toggle("is-on", i <= active);
     el.classList.toggle("is-current", i === active);
+    if (i === active) el.setAttribute("aria-current", "step");
+    else el.removeAttribute("aria-current");
   });
   psNum.textContent = String(active + 1).padStart(2, "0");
   psNum.classList.remove("flip");
