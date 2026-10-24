@@ -255,9 +255,14 @@ export function initHero(canvas, labelEls) {
     } else {
       // phones/tablets: centre the panels in the reserved slot between the buttons and the stats
       const slot = hero.querySelector(".hero-visual");
-      const cy = slot && slot.offsetHeight ? slot.offsetTop + slot.offsetHeight / 2 : H * 0.62;
+      const slotH = slot ? slot.offsetHeight : 0;
+      const cy = slotH ? slot.offsetTop + slotH / 2 : H * 0.62;
       world.position.set(0, (0.5 - cy / H) * 2 * halfH, 0);
-      world.scale.setScalar(Math.min(0.85, (halfW * 2 * 0.9) / 4.4)); // the deck is ~4.4 units wide
+      // fit the deck (~4.4 units wide, ~2.9 tall) inside both the screen width and the slot height
+      const pxPerUnit = H / (2 * halfH);
+      const fitW = (halfW * 2 * 0.9) / 4.4;
+      const fitH = slotH ? (slotH * 0.95) / (2.9 * pxPerUnit) : fitW;
+      world.scale.setScalar(Math.min(0.85, fitW, fitH));
     }
   }
   resize();
